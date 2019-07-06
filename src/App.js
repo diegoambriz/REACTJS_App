@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Header from './components/header';
+import Dishes from './components/dishes';
+import NewDish from './components/newDish';
+
+import data from './assets/data/dishes.json';
+
+import './styles/App.css';
+
+class App extends Component {
+  state = {
+    dish: 'tacos',
+    dishes: data
+  };
+
+  showDishes = e => {
+    e.preventDefault();
+    this.props.history.push('/platillos');
+  };
+
+  updateDish = (index, updatedName) => {
+    let newState = { ...this.state };
+    newState.dishes.dishes[index].name = updatedName;
+
+    this.setState(newState);
+  };
+
+  addDish = dishName => {
+    let newState = { ...this.state };
+
+    const newDish = {
+      id: newState.dishes.dishes.length,
+      name: dishName,
+      country: 'Mexico',
+      ingredients: ['Semillas', 'Pollo', 'Arroz']
+    };
+
+    newState.dishes.dishes.push(newDish);
+
+    this.setState(newState);
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <Header />
+        <NewDish onAddDish={this.addDish} />
+        {/* <Dish name={this.dish} qty="3" /> */}
+        <Dishes data={this.state.dishes} onUpdateDish={this.updateDish} />
+      </div>
+    );
+  }
 }
 
 export default App;
